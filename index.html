@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Música</title>
+<style>
+:root{color-scheme:dark;--bg:#121212;--card:#181818;--hv:#2a2a2a;--fg:#fff;--mu:#b3b3b3;--ac:#1ed760;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:250px}
+header{padding:22px 16px 14px;background:linear-gradient(180deg,#1b6b3f 0%,#124a2c 45%,var(--bg) 100%)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-.5px}
+.row{display:flex;gap:8px;margin-top:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:rgba(255,255,255,.12);color:var(--fg);border:0;border-radius:20px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--ac);color:#000}
+input[type=search],input[type=email],input[type=password]{flex:1;min-width:0;padding:11px 14px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:var(--fg);font-size:15px}
+input::placeholder{color:#d0d0d0}
+.btn{background:var(--ac);color:#000;border:0;border-radius:22px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
+.btn.g{background:rgba(255,255,255,.14);color:var(--fg)}
+#list{list-style:none;margin:4px 0;padding:0 8px}
+#list li{display:flex;align-items:center;gap:12px;padding:8px;border-radius:8px;cursor:pointer}
+#list li:active,#list li:hover{background:var(--hv)}
+#list li.on b{color:var(--ac)}
+.n{flex:1;min-width:0}
+.n b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.n small{display:block;color:var(--mu);font-size:13px}
+.ico{width:52px;height:52px;border-radius:4px;background:linear-gradient(135deg,#450af5,#c4efd9);color:#fff;display:grid;place-items:center;flex:none;font-size:20px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.x{background:none;border:0;color:var(--mu);font-size:22px;padding:6px 8px;cursor:pointer}
+.empty{text-align:center;color:var(--mu);padding:40px 24px}
+#pl{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,#2c2c2c,#1c1c1c);border-radius:14px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,.6)}
+#trow{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+#art{width:56px;height:56px}
+#tt{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sk{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,#fff var(--p,0%),#5a5a5a var(--p,0%));outline:0;margin:6px 0}
+#sk::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff}
+#sk::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff}
+.t{display:flex;justify-content:space-between;color:var(--mu);font-size:12px}
+.c{display:flex;justify-content:space-between;align-items:center;margin-top:4px;padding:0 6px}
+.c button{background:none;border:0;color:var(--mu);font-size:22px;cursor:pointer;padding:8px;border-radius:50%}
+.c button.a{color:var(--ac)}
+.c #pv,.c #nx{color:var(--fg);font-size:26px}
+.c #pp{background:#fff;color:#000;width:58px;height:58px;font-size:24px;padding:0}
+#sheet,#auth{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;z-index:20}
+#sheet{align-items:flex-end}
+#auth{display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
+#ab{width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px;text-align:center}
+#ab h2{margin:0 0 4px;font-size:28px}
+#ab input{flex:none}
+#am{color:var(--mu);font-size:14px;min-height:20px}
+#sb{width:100%;background:#282828;border-radius:16px 16px 0 0;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));max-height:70%;overflow:auto}
+#sb button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--fg);font-size:16px;padding:14px 8px;border-top:1px solid #3a3a3a;cursor:pointer}
+.sh{color:var(--mu);font-size:14px;padding:6px 8px;overflow:hidden;text-overflow:ellipsis}
+</style></head>
+<body>
+<header>
+<div class="top"><h1>🎧 Mi Música</h1><div style="display:flex;gap:8px"><button class="btn" id="add">+ Añadir</button><button class="btn g" id="out" title="Cerrar sesión">Salir</button></div></div>
+<div class="chips" id="vw"></div>
+<div class="row"><input id="q" type="search" placeholder="¿Qué quieres escuchar?"><button class="btn g" id="np">+ Lista</button><button class="btn g" id="dl" style="display:none" title="Borrar lista">🗑</button></div>
+<input id="f" type="file" accept="audio/*" multiple hidden>
+<input id="cf" type="file" accept="image/*" hidden>
+</header>
+<div id="st" class="empty" style="padding:6px 16px;font-size:14px"></div>
+<ul id="list"></ul>
+<div id="sheet"><div id="sb"></div></div>
+<div id="auth"><div id="ab">
+<h2>🎧 Mi Música</h2>
+<input id="em" type="email" placeholder="Correo electrónico" autocomplete="email">
+<input id="pw" type="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
+<button class="btn" id="bin">Entrar</button>
+<button class="btn g" id="bup">Crear cuenta</button>
+<div id="am"></div>
+</div></div>
+<div id="pl">
+<div id="trow"><div class="ico" id="art">♪</div><div id="tt">Nada reproduciéndose</div></div>
+<input id="sk" type="range" min="0" max="100" value="0" step="0.1">
+<div class="t"><span id="cu">0:00</span><span id="du">0:00</span></div>
+<div class="c"><button id="sh" title="Aleatorio">🔀</button><button id="pv">⏮</button><button id="pp">▶</button><button id="nx">⏭</button><button id="rp" title="Repetir">🔁</button></div>
+</div>
+<audio id="au" preload="metadata"></audio>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* ====== CONFIGURACIÓN: pega aquí los datos de tu proyecto de Supabase ====== */
+const SUPABASE_URL='https://cnoygyvquvwhudsmpwne.supabase.co';
+const SUPABASE_KEY='sb_publishable_JHljyO9_szFLxPuVvaFu2g_KeCHSLRw';
+/* ========================================================================== */
+const $=id=>document.getElementById(id),au=$('au');
+const msg=t=>{$('st').textContent=t||''};
+const am=t=>{$('am').textContent=t||''};
+const err=e=>msg('Error: '+((e&&e.message)||'no se pudo completar'));
+const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const ext=f=>((f.name.split('.').pop()||'bin')+'').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin';
+if(SUPABASE_URL.startsWith('PEGA')){am('Falta configurar SUPABASE_URL y SUPABASE_KEY en index.html.')}
+const sb=supabase.createClient(SUPABASE_URL.startsWith('PEGA')?'https://x.supabase.co':SUPABASE_URL,SUPABASE_KEY);
+let user=null,songs=[],pls=[],view=[],vw='all',curId=null,shuffle=false,rep=0,coverFor=null;
+const coverUrl=p=>p?sb.storage.from('covers').getPublicUrl(p).data.publicUrl:null;
+
+async function load(){
+const [a,b,c]=await Promise.all([
+sb.from('songs').select('*').order('created_at'),
+sb.from('playlists').select('*').order('created_at'),
+sb.from('playlist_songs').select('*').order('added_at')]);
+if(a.error||b.error||c.error){err(a.error||b.error||c.error);return}
+songs=a.data.map(r=>({id:r.id,name:r.name,path:r.path,size:r.size,fav:r.fav,coverPath:r.cover_path,cover:coverUrl(r.cover_path)}));
+pls=b.data.map(p=>({id:p.id,name:p.name,songIds:c.data.filter(x=>x.playlist_id===p.id).map(x=>x.song_id)}));
+render();const cs=songs.find(x=>x.id===curId);if(cs)setArt(cs)}
+async function run(q){const r=await q;if(r.error){err(r.error);return false}await load();return true}
+
+function computeView(){
+const q=$('q').value.toLowerCase();let l=songs;
+if(vw==='fav')l=l.filter(s=>s.fav);
+else if(vw.startsWith('pl:')){const p=pls.find(x=>x.id===vw.slice(3));l=p?p.songIds.map(id=>songs.find(s=>s.id===id)).filter(Boolean):[]}
+view=l.filter(s=>!q||s.name.toLowerCase().includes(q))}
+function renderSel(){
+const bar=$('vw');bar.innerHTML='';
+if(!(vw==='all'||vw==='fav'||pls.some(p=>'pl:'+p.id===vw)))vw='all';
+[['all','Todas'],['fav','♥ Favoritas']].concat(pls.map(p=>['pl:'+p.id,p.name])).forEach(([v,t])=>{const b=document.createElement('button');b.className='chip'+(v===vw?' on':'');b.textContent=t;b.onclick=()=>{vw=v;render()};bar.appendChild(b)});
+$('dl').style.display=vw.startsWith('pl:')?'':'none'}
+function render(){
+renderSel();computeView();const l=$('list');l.innerHTML='';
+if(!view.length){l.innerHTML='<div class="empty">'+(songs.length?'No hay canciones aquí todavía.':'Tu biblioteca está vacía.<br>Pulsa «+ Añadir» y sube tus canciones.')+'</div>';return}
+view.forEach((s,i)=>{
+const li=document.createElement('li');if(s.id===curId)li.className='on';
+li.innerHTML='<div class="ico"></div><div class="n"><b></b><small></small></div><button class="x h" title="Favorita"></button><button class="x m" title="Más">⋯</button>';
+const ic=li.querySelector('.ico');if(s.cover){ic.style.background='url("'+s.cover+'") center/cover'}else ic.textContent='♪';
+li.querySelector('.n b').textContent=s.name;
+li.querySelector('.n small').textContent=s.size?(s.size/1048576).toFixed(1)+' MB':'Tu biblioteca';
+const h=li.querySelector('.h');h.textContent=s.fav?'♥':'♡';if(s.fav)h.style.color='var(--ac)';
+h.onclick=e=>{e.stopPropagation();s.fav=!s.fav;render();run(sb.from('songs').update({fav:s.fav}).eq('id',s.id))};
+li.querySelector('.m').onclick=e=>{e.stopPropagation();sheet(s)};
+li.onclick=()=>play(i);l.appendChild(li)})}
+function setArt(s){const a=$('art');if(s&&s.cover){a.style.background='url("'+s.cover+'") center/cover';a.textContent=''}else{a.style.background='';a.textContent='♪'}}
+
+async function play(i){
+if(i<0||i>=view.length)return;const s=view[i];curId=s.id;
+$('tt').textContent=s.name;setArt(s);render();
+const r=await sb.storage.from('music').createSignedUrl(s.path,21600);
+if(r.error){err(r.error);return}
+if(curId!==s.id)return;
+au.src=r.data.signedUrl;au.play().catch(()=>{});
+if('mediaSession'in navigator){try{navigator.mediaSession.metadata=new MediaMetadata({title:s.name,artist:'Mi biblioteca',artwork:s.cover?[{src:s.cover}]:[]})}catch(e){}}}
+const vi=()=>view.findIndex(x=>x.id===curId);
+function next(auto){
+if(!view.length)return;
+if(auto&&rep===2)return play(vi());
+let n=shuffle?Math.floor(Math.random()*view.length):vi()+1;
+if(n>=view.length){if(rep===1||!auto)n=0;else return}
+play(n)}
+function prev(){if(au.currentTime>3)au.currentTime=0;else{const i=vi();play(i<=0?view.length-1:i-1)}}
+
+async function remove(s){
+if(!confirm('¿Quitar «'+s.name+'» de tu biblioteca?'))return;
+if(s.id===curId){au.pause();au.removeAttribute('src');curId=null;$('tt').textContent='Nada reproduciéndose';setArt(null)}
+await sb.storage.from('music').remove([s.path]);
+if(s.coverPath)await sb.storage.from('covers').remove([s.coverPath]);
+await run(sb.from('songs').delete().eq('id',s.id))}
+function closeSheet(){$('sheet').style.display='none'}
+function sheet(s){
+const b=$('sb');b.innerHTML='';
+const note=t=>{const d=document.createElement('div');d.className='sh';d.textContent=t;b.appendChild(d)};
+const act=(t,fn)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>{closeSheet();fn()};b.appendChild(x)};
+note(s.name);
+pls.forEach(p=>{const has=p.songIds.includes(s.id);
+act(has?'✓ Quitar de «'+p.name+'»':'Añadir a «'+p.name+'»',()=>run(has?sb.from('playlist_songs').delete().eq('playlist_id',p.id).eq('song_id',s.id):sb.from('playlist_songs').insert({playlist_id:p.id,song_id:s.id})))});
+if(!pls.length)note('Crea una lista con «+ Lista» para añadir canciones.');
+act('🖼 Cambiar carátula',()=>{coverFor=s;$('cf').click()});
+act('🗑 Quitar de la biblioteca',()=>remove(s));
+act('Cerrar',()=>{});
+$('sheet').style.display='flex'}
+$('sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet()};
+$('np').onclick=async()=>{
+const n=prompt('Nombre de la lista');if(!n||!n.trim())return;
+const r=await sb.from('playlists').insert({name:n.trim()}).select().single();
+if(r.error)return err(r.error);vw='pl:'+r.data.id;await load()};
+$('dl').onclick=async()=>{
+const p=pls.find(x=>x.id===vw.slice(3));
+if(p&&confirm('¿Borrar la lista «'+p.name+'»? Las canciones no se borran.')){vw='all';await run(sb.from('playlists').delete().eq('id',p.id))}};
+$('add').onclick=()=>$('f').click();
+$('f').onchange=async e=>{
+const fs=[...e.target.files];e.target.value='';if(!fs.length||!user)return;
+for(let k=0;k<fs.length;k++){const f=fs[k];msg('Subiendo '+(k+1)+' de '+fs.length+': '+f.name+'…');
+const p=user.id+'/'+crypto.randomUUID()+'.'+ext(f);
+const u=await sb.storage.from('music').upload(p,f,{contentType:f.type||'audio/mpeg'});
+if(u.error){err(u.error);return}
+const r=await sb.from('songs').insert({name:f.name.replace(/\.[^.]+$/,''),path:p,size:f.size});
+if(r.error){await sb.storage.from('music').remove([p]);err(r.error);return}}
+msg('');await load()};
+$('cf').onchange=async e=>{
+const f=e.target.files[0];e.target.value='';if(!f||!coverFor||!user)return;
+msg('Subiendo carátula…');
+const p=user.id+'/'+crypto.randomUUID()+'.'+ext(f);
+const u=await sb.storage.from('covers').upload(p,f,{contentType:f.type||'image/jpeg'});
+if(u.error)return err(u.error);
+const old=coverFor.coverPath;
+if(await run(sb.from('songs').update({cover_path:p}).eq('id',coverFor.id))){if(old)await sb.storage.from('covers').remove([old]);msg('')}};
+$('q').oninput=render;
+
+$('pp').onclick=()=>{if(curId===null)return view.length&&play(0);au.paused?au.play():au.pause()};
+$('nx').onclick=()=>next(false);$('pv').onclick=prev;
+$('sh').onclick=()=>{shuffle=!shuffle;$('sh').className=shuffle?'a':''};
+$('rp').onclick=()=>{rep=(rep+1)%3;$('rp').textContent=rep===2?'🔂':'🔁';$('rp').className=rep?'a':''};
+$('sk').oninput=()=>{$('sk').style.setProperty('--p',$('sk').value+'%');if(au.duration)au.currentTime=$('sk').value/100*au.duration};
+au.ontimeupdate=()=>{$('cu').textContent=fmt(au.currentTime);if(au.duration){const p=au.currentTime/au.duration*100;$('sk').value=p;$('sk').style.setProperty('--p',p+'%')}};
+au.onloadedmetadata=()=>$('du').textContent=fmt(au.duration);
+au.onplay=()=>{$('pp').textContent='⏸'};au.onpause=()=>{$('pp').textContent='▶'};
+au.onended=()=>next(true);
+if('mediaSession'in navigator){const m=navigator.mediaSession;
+[['play',()=>au.play()],['pause',()=>au.pause()],['previoustrack',prev],['nexttrack',()=>next(false)]].forEach(([a,h])=>{try{m.setActionHandler(a,h)}catch(e){}});
+try{m.setActionHandler('seekto',d=>{au.currentTime=d.seekTime})}catch(e){}}
+
+/* ====== Cuentas ====== */
+async function authDo(mode){
+const email=$('em').value.trim(),password=$('pw').value;am('');
+if(!email||password.length<6)return am('Escribe tu correo y una contraseña de al menos 6 caracteres.');
+const r=mode==='in'?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
+if(r.error)return am(r.error.message);
+if(mode==='up'&&!r.data.session)am('Cuenta creada. Revisa tu correo para confirmarla y luego pulsa «Entrar».')}
+$('bin').onclick=()=>authDo('in');$('bup').onclick=()=>authDo('up');
+$('out').onclick=()=>{au.pause();sb.auth.signOut()};
+sb.auth.onAuthStateChange((_e,session)=>{
+user=session?session.user:null;
+$('auth').style.display=user?'none':'flex';
+if(user)setTimeout(load,0);else{songs=[];pls=[];curId=null;render()}});
+render();
+</script>
+</body></html>
